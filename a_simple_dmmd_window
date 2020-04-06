@@ -1,0 +1,75 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+from PIL import Image, ImageTk
+import random
+details=()
+fonts=()
+class App:
+    def __init__(self, master):
+        self.master = master
+        self.initWidgets()
+    def initWidgets(self):
+        global details, fonts
+        text1=Text(self.master, height=25, width=54)
+        bb=ImageTk.PhotoImage(file='6.jpg')
+        text1.bm=bb
+        text1.insert(END, '\n')
+        text1.image_create(END, image=bb)
+        text1.pack(side=LEFT, fill=BOTH, expand=YES)
+
+        text2=Text(self.master, height=25, width=50)
+        text2.pack(fill=BOTH, expand=YES)
+        self.text=text2
+        scroll=Scrollbar(self.master, command=text2.yview)
+        scroll.pack(side=RIGHT, fill=Y)
+        text2.configure(yscrollcommand=scroll.set)
+        text2.tag_configure('title', font=('微软雅黑', 20, 'bold'), justify=CENTER, spacing3=10)
+        text2.tag_configure('title2', foreground='red', font=('微软雅黑', 18, 'bold'), justify=LEFT, spacing3=10)
+        text2.insert(END, '\n')
+        text2.insert(END, 'DRAMAtical Murder\n', 'title')
+        text2.insert(END, '本窗口由以下企业赞助：\n', 'title2')
+        details=('水纪权益保护协会  ', '龙峰纹身会所\n', '威尔士洗手液&托利普剃须刀  '
+                 , '东江男科医院\n', '星光LOVEHOTEL  ', '白金牢笼婚介所\n', '苍叶&尼桑贞操保护协会  ', '莲莲宠物店\n'
+                 , '红师傅理发店  ', '颗粒水母分局\n', '挪椅子钉子铺  ', '命苦叔靴店\n')
+        fonts=('华文中宋', '方正舒体', '方正姚体', '华文新魏', '华文细黑', '华文彩云'
+               , '华文仿宋', '华文行楷', '华文琥珀', '华文楷体', '华文隶书', '华文宋体')
+        i='1'
+        for y in details:
+            ct = [random.randrange(256) for x in range(3)]
+            color = "#%02x%02x%02x" % tuple(ct)
+            text2.tag_configure(i, foreground=color, justify=CENTER, font=(fonts[int(i)-1], 15), spacing3=10)
+            text2.insert(END, y, i)
+            i=str(int(i)+1)
+        ff = ttk.Frame(self.master)
+        ff.pack()
+        ttk.Button(ff, text='JUST TRY', command=self.change2).pack(side=TOP, ipadx=50)
+        ttk.Label(ff, text='选择喜欢的角色：', font=('微软雅黑', 15, 'bold')).pack(side=TOP, anchor=W)
+        self.iv=IntVar()
+        pic=('1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg')
+        names=('Koujaku', 'Noiz', 'Clear', 'Mink', 'Ren')
+        i=1
+        for x in pic:
+            bm=ImageTk.PhotoImage(file=x)
+            r=ttk.Radiobutton(ff, image=bm, text=names[i-1], compound=BOTTOM, variable=self.iv, command=self.change, value=i)
+            r.bm=bm
+            r.pack(side=LEFT, anchor=S)
+            i+=1
+        self.iv.set(1)
+    def change(self):
+        messagebox.showinfo(title='TEST', message=self.iv.get())
+    def change2(self):
+        global details, fonts
+        i = '1'
+        for y in details:
+            ct = [random.randrange(256) for x in range(3)]
+            color = "#%02x%02x%02x" % tuple(ct)
+            self.text.tag_configure(i, foreground=color, justify=CENTER, font=(fonts[int(i) - 1], 15), spacing3=10)
+            i = str(int(i) + 1)
+root = Tk()
+root.title('TEST')
+im = Image.open("00.ico")
+img = ImageTk.PhotoImage(im)
+root.tk.call('wm', 'iconphoto', root._w, img)
+App(root)
+root.mainloop()
